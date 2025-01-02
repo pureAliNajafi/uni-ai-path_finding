@@ -38,7 +38,7 @@ def reconstruct_path():
         if current_node is None:
             return path
         path.append(current_node)
-        print(path)
+        # print(path)
         return reconstructor(parent[current_node])
 
     path = reconstructor(goal)
@@ -52,7 +52,8 @@ while open_list:
     # Get the node with the lowest g-cost + h-cost (f-cost)
     f_costs = {node: g_costs[node] + h_costs[node] for node in open_list}
     # print(f_costs)    
-    current_node = min(f_costs, key = f_costs.get)
+    # select node in open_list with the least f-cost
+    current_node = min(f_costs, key = f_costs.get) 
     
     # If the current node is the goal, reconstruct the path
     if current_node == goal:
@@ -74,3 +75,4 @@ while open_list:
             # Add the neighbor to the open list if not already in it
             if neighbor not in open_list:
                 open_list.append(neighbor)
+print(f_costs)

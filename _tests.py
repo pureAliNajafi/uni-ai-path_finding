@@ -1,17 +1,40 @@
-d={(0, 1): 3.0, (1, 0): 2.914213562373095}
+open_list = [start]
+closed_set = set()
 
-print(min(d, key=d.get))
-print(d.keys())
+# Initial f_limit based on the start node
+f_limit = h_costs[start] + g_costs[start]  # Only h_costs[start] is typically used if g_cost is 0 initially
 
+def calculate_g_cost(previous_node, edge_distance):
+    # Calculate g(n) = g(n-1) + distance
+    return g_costs[previous_node] + edge_distance
 
+def reconstruct_path():
+    path = []
+    def reconstructor(current_node):
+        if current_node is None:
+            return path
+        path.append(current_node)
+        return reconstructor(parent[current_node])
 
+    path = reconstructor(goal)
+    path.reverse()  # Reverse the path to start from the beginning
+    return path
 
-ages = [5, 12, 17, 18, 24, 32]
+# Expansion tracker
+expansion = []
 
-def myFunc(x):
-  if x < 18:
-    return False
-  else:
-    return True
-
-adults = filter(myFunc, ages)
+while True:
+    tentative_current = open_list[0]
+    i = 0
+    
+    # Iteratively deepen based on f_limit
+    while f_costs[tentative_current] <= f_limit:
+        i += 1
+        print("Expanding:", tentative_current)
+        tentative_current = open_list[i]  # Advance to the next node
+    
+    current = tentative_current  # Set the current node after thresholding
+    
+    # Your remaining code here...
+    
+    break

@@ -1,33 +1,55 @@
 from graph import graph
 import graph_bounds as graph_bounds
-from heuristics import heuristics
+from heuristics import heuristics as h_costs
 
-ida_star_result = {"path": [], "cost": 0.0}
-# Initialize the start node and the goal node
-start = graph_bounds.start
-goal = graph_bounds.goal
+def ida_star(graph, start, goal, h_costs):
+    # Helper function to perform depth-first search with a given cost limit
+    def dfs(node, g_cost, limit, path, visited):
+        f_cost = g_cost + h_costs[node]
+        
+        # If the f-cost exceeds the limit, return the f-cost for pruning
+        if f_cost > limit:
+            return f_cost
+        
+        # If the goal is found, return the path
+        if node == goal:
+            return path
+        
+        visited.add(node)  # Mark the node as visited
 
+        # Explore neighbors
+        min_cost = float('inf')
+        for neighbor, edge_cost in graph.get(node, []):
+            if neighbor not in visited:
+                new_path = path + [neighbor]
+                new_g_cost = g_cost + edge_cost
+                result = dfs(neighbor, new_g_cost, limit, new_path, visited)
 
-h_costs = heuristics
+                # If the goal is found, return the path
+                if isinstance(result, list):  # if the result is a path, return it
+                    return result
+                
+                # Otherwise, track the minimum f-cost encountered
+                min_cost = min(min_cost, result)
 
-g_costs = {start: 0}  # g-cost for the start node is 0
-parent = {start: None} 
+        visited.remove(node)  # Unmark the node
 
-# Open list (nodes to be evaluated)
-open_list = [start]
-f_costs = {} # do nothing here, using inside loop
+        return min_cost  # Return the minimum f-cost found
 
+    # Initial limit on f-cost (start with the heuristic cost of the start node)
+    limit = h_costs[start]
+    path = None
 
-def calculate_g_cost(previous_node, edge_distance):
-    # Calculate g(n) = g(n-1) + distance
-    return g_costs[previous_node] + edge_distance
+    # Repeat the search with increasing limits until a solution is found
+    while path is None:
+        visited = set()
+        result = dfs(start, 0, limit, [start], visited)
 
+        if isinstance(result, list):
+            path = result  # If the result is a path, return it
+        else:
+            limit = result  # If not, increase the limit and try again
 
-def reconstruct_path():
-    path = []
-    current_node = goal
-    while current_node is not None:
-        path.append(current_node)
-        current_node = parent[current_node]
-    path.reverse() # to Reorder    
     return path
+path = ida_star(graph, graph_bounds.start, graph_bounds.goal, h_costs)
+print("Path found:", path)
