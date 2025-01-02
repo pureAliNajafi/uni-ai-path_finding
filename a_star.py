@@ -2,7 +2,7 @@ from graph import graph
 import graph_bounds as graph_bounds
 from heuristics import heuristics
 
-a_star_result = {"path": [], "cost": 0.0}
+a_star_result = {"path": [], "g_cost": 0.0}
 # Initialize the start node and the goal node
 start = graph_bounds.start
 goal = graph_bounds.goal
@@ -57,8 +57,8 @@ while open_list:
     
     # If the current node is the goal, reconstruct the path
     if current_node == goal:
-        a_star_result = {"path": reconstruct_path(), "cost": g_costs[goal]}
-        print("a_star", a_star_result)
+        a_star_result = {"path": reconstruct_path(), "g_cost": g_costs[goal]}
+        # print("a_star", a_star_result)
         break
     
     # Removing current selected node from open list 
@@ -75,4 +75,4 @@ while open_list:
             # Add the neighbor to the open list if not already in it
             if neighbor not in open_list:
                 open_list.append(neighbor)
-print(f_costs)
+# print(f_costs)

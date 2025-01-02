@@ -52,4 +52,16 @@ def ida_star(graph, start, goal, h_costs):
 
     return path
 path = ida_star(graph, graph_bounds.start, graph_bounds.goal, h_costs)
-print("Path found:", path)
+# print("Path found:", path)
+g_cost = 0
+for i in range(1, len(path)):
+    current_node = path[i-1]
+    next_node = path[i]
+    # Find the edge cost between current_node and next_node
+    edge_cost = next(edge_distance for neighbor, edge_distance in graph[current_node] if neighbor == next_node)
+    g_cost += edge_cost
+
+# Calculate the f-cost of the goal node
+goal_node = path[-1]
+ida_star_result={"path": path, "g_cost": g_cost}
+# print(ida_star_result)
