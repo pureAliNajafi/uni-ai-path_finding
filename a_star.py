@@ -33,12 +33,13 @@ def calculate_g_cost(previous_node, edge_distance):
 #     return path
 
 def reconstruct_path():
-    def reconstructor(current_node,path=[]):
+    path = []
+    def reconstructor(current_node):
         if current_node is None:
             return path
         path.append(current_node)
         print(path)
-        return reconstructor(parent[current_node],path)
+        return reconstructor(parent[current_node])
 
     path = reconstructor(goal)
     path.reverse() # to Reorder    
